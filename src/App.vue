@@ -14,7 +14,7 @@
         />
       </div>
       <v-spacer></v-spacer>
-      <v-btn href="https://github.com/jacksonks" target="_blank" text>
+      <v-btn href="https://github.com/jacksonks/join-teste-front-vuejs" target="_blank" text>
         <span class="mr-2">Github</span>
         <v-icon>code</v-icon>
       </v-btn>
