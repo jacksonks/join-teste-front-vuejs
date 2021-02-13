@@ -20,7 +20,7 @@
       </v-btn>
     </v-app-bar>
     <v-main>
-      <filters @parameter="getParameter" />
+      <filters @stations="getStations" @types="getTypes" />
       <v-card>
         <div id="map"></div>
       </v-card>
@@ -136,6 +136,8 @@ export default {
   data: () => ({
     dialog: false,
     filtered: 'undefined',
+    types: undefined,
+    stations: undefined,
     items:'undefined',
   }),
   async mounted() {
@@ -144,9 +146,14 @@ export default {
   computed:{},
   watch:{},
   methods: {
-    getParameter(parameter){
-      console.log('parameter:', parameter)
-      this.filtered = parameter
+    getTypes(types){
+      console.log('types:', types)
+      this.types = types
+    },
+    getStations(stations){
+      console.log('stations:', stations)
+      this.stations = stations
+      this.filtered = stations
       if(this.filtered.length > 0){
         this.dialog = true
       }
