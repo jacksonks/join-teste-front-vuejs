@@ -124,6 +124,7 @@
 // import openlayer css for style
 import "ol/ol.css";
 // This is library of openlayer for handle map
+import GeoJSON from 'ol/format/GeoJSON';
 import Map from "ol/Map";
 import View from "ol/View";
 import { defaults as defaultControls, ScaleLine } from "ol/control";
@@ -162,12 +163,22 @@ export default {
       // create vector layer
       var source = new VectorSource();
       var vector = new VectorLayer({
-        source: source
+        source: source,
+/*        format: new GeoJSON(),
+        url:'./station_list.geojson',*/
       });
       // create title layer
       var raster = new TileLayer({
         source: new OSM(),
       });
+/*      // Vector data source in GeoJSON format
+      const vectorGeoJSON = new VectorLayer({
+        source: new VectorSource({
+          url: './station_list.geojson',
+          format: new GeoJSON()
+        })
+      })*/
+
       // create map with 2 layer
       var map = new Map({
         controls: defaultControls().extend([
@@ -178,14 +189,12 @@ export default {
         target: "map",
         layers: [raster, vector],
         view: new View({
-          /*projection: "EPSG:3857", //HERE IS THE VIEW PROJECTION*/
-          projection: "EPSG:4326",
-          center: [0, 0],
-          zoom: 5,
+          /*projection: "EPSG:4326", //HERE IS THE VIEW PROJECTION*/
+          projection: "EPSG:4674",
+          center: [0,0],
+          zoom: 4,
         }),
       });
-      //Add a Vector Layer
-      
     },
   },
 };
