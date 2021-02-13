@@ -130,6 +130,7 @@ import View from "ol/View";
 import { defaults as defaultControls, ScaleLine } from "ol/control";
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {OSM, Vector as VectorSource} from 'ol/source';
+/*import {Fill, Stroke, Style, Text} from 'ol/style';*/
 import Filters from "@/components/filters";
 export default {
   name: 'App',
@@ -160,24 +161,45 @@ export default {
       }
     },
     initiateMap() {
+/*      var style = new Style({
+        fill: new Fill({
+          color: 'rgba(255, 255, 255, 0.6)',
+        }),
+        stroke: new Stroke({
+          color: '#319FD3',
+          width: 1,
+        }),
+        text: new Text({
+          font: '12px Calibri,sans-serif',
+          fill: new Fill({
+            color: '#000',
+          }),
+          stroke: new Stroke({
+            color: '#fff',
+            width: 3,
+          }),
+        }),
+      });*/
       // create vector layer
       var source = new VectorSource();
       var vector = new VectorLayer({
         source: source,
-/*        format: new GeoJSON(),
-        url:'./station_list.geojson',*/
       });
       // create title layer
       var raster = new TileLayer({
-        source: new OSM(),
+        source: new OSM()
       });
-/*      // Vector data source in GeoJSON format
+      // Vector data source in GeoJSON format
       const vectorGeoJSON = new VectorLayer({
         source: new VectorSource({
-          url: './station_list.geojson',
-          format: new GeoJSON()
-        })
-      })*/
+          format: new GeoJSON(),
+          url: 'https://raw.githubusercontent.com/jacksonks/geojson/master/station_list.geojson',
+        }),
+/*        style: function (feature) {
+          style.getText().setText(feature.get('name'));
+          return style;
+        },*/
+      })
 
       // create map with 2 layer
       var map = new Map({
@@ -187,14 +209,16 @@ export default {
           }),
         ]),
         target: "map",
-        layers: [raster, vector],
+        layers: [raster, vector, vectorGeoJSON],
         view: new View({
-          /*projection: "EPSG:4326", //HERE IS THE VIEW PROJECTION*/
-          projection: "EPSG:4674",
-          center: [0,0],
-          zoom: 4,
+          projection: "EPSG:4326",
+          center: [-51.815011395380765,-24.650150016322684],
+          zoom: 7,
         }),
       });
+/*      map.on('click', function (e){
+        console.log('e', e.coordinate)
+      })*/
     },
   },
 };

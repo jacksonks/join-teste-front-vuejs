@@ -150,8 +150,8 @@
 /* eslint-disable */
 export default {
   data: () => ({
-    station_list: undefined,
-    station_type_list: undefined,
+    station_list: [],
+    station_type_list: [],
     stations_types_selected: [],
     stations_selected: [],
     expand: true,
@@ -163,7 +163,7 @@ export default {
   computed:{
     stations(){
       let aux = []
-      if(this.stations_types_selected.length !== 0){
+      if(this.stations_types_selected.length ==! 0){
         for(let station in this.stations_types_selected){
           let filtered = this.station_list.filter(a => {
             return a.station_type_id === this.stations_types_selected[station].id;
