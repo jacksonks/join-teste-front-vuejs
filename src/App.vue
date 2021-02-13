@@ -178,11 +178,14 @@ export default {
         target: "map",
         layers: [raster, vector],
         view: new View({
+          /*projection: "EPSG:3857", //HERE IS THE VIEW PROJECTION*/
           projection: "EPSG:4326",
           center: [0, 0],
-          zoom: 2,
+          zoom: 5,
         }),
       });
+      //Add a Vector Layer
+      
     },
   },
 };
