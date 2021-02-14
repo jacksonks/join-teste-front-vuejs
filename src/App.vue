@@ -21,92 +21,54 @@
     </v-app-bar>
     <v-main>
       <filters @stations="getStations" @types="getTypes" />
-      <v-card>
-        <div id="map"></div>
-      </v-card>
-      <div class="text-center">
-        <v-dialog
-            v-model="dialog"
-            transition="dialog-top-transition"
-            width="500"
-        >
-          <v-card>
-            <v-card-title class="headline grey lighten-2">
-              Dados da Estação
-              <v-spacer/>
-              <v-btn
-                  text
-                  fab
-                  @click="dialog = false"
-              >
-                <v-icon>close</v-icon>
-              </v-btn>
-            </v-card-title>
 
-            <v-card-text>
-              <v-container fluid>
-                <v-row align="center">
+          <v-card width="500" class="text-center popup-container">
+            <v-card-title class="headline grey lighten-2">Dados da Estação</v-card-title>
+            <v-card-text class="popup-container">
+              <v-container fluid class="popup-container">
+                <v-row align="center" class="popup-container">
                   <v-col class="d-flex" cols="4">
-                    <v-text-field
-                        outlined
-                        label="Identificador"
-                    ></v-text-field>
+                  <label>Identificador:</label><strong class="overlay-text" id="feature-id"></strong><br/>
                   </v-col>
-
                   <v-col class="d-flex" cols="8">
-                    <v-text-field
-                        outlined
-                        label="Nome"
-                    ></v-text-field>
+                      <v-btn outlined color="black">
+                        <label>Nome: </label><strong class="overlay-text" id="feature-name"></strong>
+                      </v-btn>
+                    <div style="border-color: black; border-radius: 2px; ">
+<!--                  <label>Nome:</label><strong class="overlay-text" id="feature-name"></strong>-->
+                    </div>
                   </v-col>
-
+                  <v-col class="d-flex" cols="4">
+                    <v-text-field dense hide-details readonly outlined label="Identificador"></v-text-field>
+                  </v-col>
+                  <v-col class="d-flex" cols="8">
+                    <v-text-field dense hide-details readonly outlined label="Nome"></v-text-field>
+                  </v-col>
                   <v-col class="d-flex" cols="6">
-                    <v-text-field
-                        outlined
-                        label="Latitude"
-                    ></v-text-field>
+                    <v-text-field dense hide-details readonly outlined label="Latitude"></v-text-field>
                   </v-col>
-
                   <v-col class="d-flex" cols="6">
-                    <v-text-field
-                        outlined
-                        label="Longitude"
-                    ></v-text-field>
+                    <v-text-field dense hide-details readonly outlined label="Longitude"></v-text-field>
                   </v-col>
-
                   <v-col class="d-flex" cols="4">
-                    <v-text-field
-                        outlined
-                        label="Elevação (m2)"
-                    ></v-text-field>
+                    <v-text-field dense hide-details readonly outlined label="Elevação (m2)"></v-text-field>
                   </v-col>
-
                   <v-col class="d-flex" cols="4">
-                    <v-text-field
-                        outlined
-                        label="Inicio de Operação"
-                    ></v-text-field>
+                    <v-text-field dense hide-details readonly outlined label="Inicio de Operação"></v-text-field>
                   </v-col>
-
                   <v-col class="d-flex" cols="4">
-                    <v-text-field
-                        outlined
-                        label="Fim de Operação"
-                    ></v-text-field>
+                    <v-text-field dense hide-details readonly outlined label="Fim de Operação"></v-text-field>
                   </v-col>
-
                   <v-col class="d-flex" cols="12">
-                    <v-text-field
-                        outlined
-                        label="Tipo de Estação"
-                    ></v-text-field>
+                    <v-text-field dense hide-details readonly outlined label="Tipo de Estação"></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
           </v-card>
-        </v-dialog>
-      </div>
+      <v-card>
+        <div id="map"></div>
+      </v-card>
     </v-main>
   </v-app>
 </template>
@@ -123,11 +85,22 @@ import { defaults as defaultControls, ScaleLine } from "ol/control";
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {OSM, Vector as VectorSource} from 'ol/source';
 import {Fill, Stroke, Style, Text, Circle} from 'ol/style';
+import Overlay from 'ol/Overlay';
 import Filters from "@/components/filters";
 export default {
   name: 'App',
   components: {Filters},
   data: () => ({
+    id: undefined,
+    creat_at: undefined,
+    update_At: undefined,
+    name: undefined,
+    latitude: undefined,
+    longitude: undefined,
+    elevation_meters: undefined,
+    operation_start_date: undefined,
+    operation_end_date: undefined,
+    station_type_id: undefined,
     dialog: false,
     types: undefined,
     stations: undefined,
@@ -146,7 +119,6 @@ export default {
     async getStations(stations){
       console.log('stations:', stations)
       this.stations = stations
-      this.dialog = true
     },
     initiateMap() {
       var fillStyle = new Fill({
@@ -184,12 +156,11 @@ export default {
           stroke: strokeStyle,
           image: circleStyle,
         })
-/*        style: function (feature) {
-          style.getText().setText(feature.get('name'));
-          return style;
-        },*/
+        /*        style: function (feature) {
+                  style.getText().setText(feature.get('name'));
+                  return style;
+                },*/
       })
-
       // create map with 2 layer
       var map = new Map({
         controls: defaultControls().extend([
@@ -205,9 +176,20 @@ export default {
           zoom: 7,
         }),
       });
-/*      if( this.stations ){ map.addLayer(vectorGeoJSON) }*/
+      var popup = document.querySelector('.popup-container')
+      var overlayLayer =  new Overlay({ element: popup })
+      map.addOverlay(overlayLayer)
+      var overlayFeatureId = document.getElementById('feature-id')
+      var overlayFeatureName = document.getElementById('feature-name')
       map.on('click', function (e){
-        console.log('e:', e)
+        overlayLayer.setPosition(undefined)
+        map.forEachFeatureAtPixel(e.pixel, function (feature, layer){
+          console.log(feature.get('id'))
+          console.log(feature.get('name'))
+          overlayLayer.setPosition(e.coordinate)
+          overlayFeatureId.innerHTML = feature.get('id')
+          overlayFeatureName.innerHTML = feature.get('name')
+        })
       })
     },
   },
