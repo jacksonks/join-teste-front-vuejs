@@ -122,6 +122,7 @@ import View from "ol/View";
 import { defaults as defaultControls, ScaleLine } from "ol/control";
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {OSM, Vector as VectorSource} from 'ol/source';
+import {Fill, Stroke, Style, Text, Circle} from 'ol/style';
 import Filters from "@/components/filters";
 export default {
   name: 'App',
@@ -148,6 +149,20 @@ export default {
       this.dialog = true
     },
     initiateMap() {
+      var fillStyle = new Fill({
+        color: 'rgba(255, 255, 255, 0.6)',
+      })
+      var strokeStyle = new Stroke({
+        color: '#319FD3',
+        width: 1,
+      })
+      var circleStyle = new Circle({
+        fill: new Fill({
+          color: 'rgba(255, 255, 255, 0.6)',
+        }),
+        radius: 15,
+        stroke: strokeStyle,
+      })
       // create vector layer
       var source = new VectorSource();
       var vector = new VectorLayer({
@@ -164,6 +179,11 @@ export default {
           url: this.url,
         }),
         visible: true,
+        style: new Style({
+          fill: fillStyle,
+          stroke: strokeStyle,
+          image: circleStyle,
+        })
 /*        style: function (feature) {
           style.getText().setText(feature.get('name'));
           return style;
@@ -186,9 +206,9 @@ export default {
         }),
       });
 /*      if( this.stations ){ map.addLayer(vectorGeoJSON) }*/
-/*      map.on('click', function (e){
-        console.log('e', e.coordinate)
-      })*/
+      map.on('click', function (e){
+        console.log('e:', e)
+      })
     },
   },
 };
