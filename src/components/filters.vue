@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row class="text-center">
-      <v-col cols="6">
+      <v-col xs="12" sm="6" md="6">
         <v-container fluid>
           <v-row class="text-center">
             <v-col cols="12">
@@ -19,7 +19,7 @@
           </v-row>
         </v-container>
       </v-col>
-      <v-col cols="6">
+      <v-col xs="12" sm="6" md="6">
         <v-container fluid>
           <v-row>
             <v-card width="600">
