@@ -1,20 +1,6 @@
 <template>
   <v-container fluid>
     <v-row class="text-center">
-      <v-col col="6">
-        <v-col cols="12">
-          <v-img alt="Join Blue Logo" :src="require('../assets/logo-blue.png')" class="my-3" contain height="100"/>
-        </v-col>
-        <v-col class="mb-4">
-          <h1 class="display-1 font-weight-bold mb-3">Mapa para Visualização de Localização de Estações</h1>
-          <p class="subheading font-weight-bold">Desenvolvido com
-            <a href="https://vuejs.org/" target="_blank">VueJS</a>,
-            <a href="https://vuetifyjs.com/en/" target="_blank">Vuetify</a>, e
-            <a href="https://openlayers.org/" target="_blank">OpenLayers</a>, por
-            <a href="https://www.linkedin.com/in/jackson-kelvin/" target="_blank">Jackson Kelvin de Souza</a>.
-          </p>
-        </v-col>
-      </v-col>
       <v-col cols="6">
         <v-container fluid>
           <v-row>
@@ -239,27 +225,27 @@ export default {
           });
     },
     fetchStation() {
-      fetch("http://localhost:3000/station")
+      fetch("https://raw.githubusercontent.com/jacksonks/geojson/master/station.json")
           .then(response => response.json())
           .then(response => {
-            this.station_list = response;
+            this.station_list = response.station;
           })
           .catch((error) => {
             console.log('Looks like there was a problem: \n', error);
           });
     },
     fetchStationType() {
-      fetch("http://localhost:3000/station_type")
+      fetch("https://raw.githubusercontent.com/jacksonks/geojson/master/station_type.json")
           .then(response => response.json())
           .then(response => {
-            this.station_type_list = response;
+            this.station_type_list = response.station_type;
           })
           .catch((error) => {
             console.log('Looks like there was a problem: \n', error);
           });
     },
     consulting(){
-      console.log('original:', this.geojson)
+      //console.log('original:', this.geojson)
       let features = []
       for(let item in this.geojson.features){
         for(let station in this.stations_selected){

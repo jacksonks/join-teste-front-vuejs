@@ -61,6 +61,24 @@
       </v-card>
     </v-main>
     <filters @stations="getStations" @types="getTypes" />
+    <v-footer>
+      <v-container fluid>
+        <v-row class="text-center">
+          <v-col cols="12">
+            <v-img alt="Join Blue Logo" :src="require('../src/assets/logo-blue.png')" class="my-3" contain height="100"/>
+          </v-col>
+          <v-col class="mb-4">
+            <h1 class="display-1 font-weight-bold mb-3">Mapa para Visualização de Localização de Estações</h1>
+            <p class="subheading font-weight-bold">Desenvolvido com
+              <a href="https://vuejs.org/" target="_blank">VueJS</a>,
+              <a href="https://vuetifyjs.com/en/" target="_blank">Vuetify</a>, e
+              <a href="https://openlayers.org/" target="_blank">OpenLayers</a>, por
+              <a href="https://www.linkedin.com/in/jackson-kelvin/" target="_blank">Jackson Kelvin de Souza</a>.
+            </p>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-footer>
   </v-app>
 </template>
 
@@ -93,10 +111,8 @@ export default {
     operation_end_date: undefined,
     station_type_id: undefined,
     dialog: false,
-    icon: require('../src/assets/location_on-white-48dp.svg'),
     types: undefined,
     stations: undefined,
-    url: 'https://raw.githubusercontent.com/jacksonks/geojson/master/station_list.geojson',
   }),
   async mounted() {
     await this.initiateMap();
@@ -113,26 +129,47 @@ export default {
       this.stations = stations
     },
     initiateMap() {
-      var fillStyle = new Fill({
-        color: 'rgba(255, 255, 255, 0.6)',
-      })
-      var strokeStyle = new Stroke({
-        color: '#319FD3',
-        width: 1,
-      })
+      var colors = [
+        {
+          "id": "1",
+          "created_at": "2020-11-30 10:43:46.687141-03",
+          "update_at": "2020-11-30 10:43:46.687162-03",
+          "name": "AGROMETEOROLOGICAL",
+          "color": "#7cb5ec"
+        },
+        {
+          "id": "2",
+          "created_at": "2020-11-30 10:43:46.688442-03",
+          "update_at": "2020-11-30 10:43:46.688459-03",
+          "name": "CLIMATOLÓGICO",
+          "color": "#434348"
+        },
+        {
+          "id": "3",
+          "created_at": "2020-11-30 10:43:46.68895-03",
+          "update_at": "2020-11-30 10:43:46.688964-03",
+          "name": "HIDROCLIMATOLÓGICO",
+          "color": "#90ed7d"
+        },
+        {
+          "id": "4",
+          "created_at": "2020-11-30 10:43:46.689495-03",
+          "update_at": "2020-11-30 10:43:46.689513-03",
+          "name": "HIDROMÉTRICO",
+          "color": "#f7a35c"
+        },
+        {
+          "id": "5",
+          "created_at": "2020-11-30 10:43:46.690113-03",
+          "update_at": "2020-11-30 10:43:46.690134-03",
+          "name": "PLUVIOMETRIC",
+          "color": "#8085e9"
+        }
+      ]
       var imageStyle = new Icon({
         color: 'red',
-        // For Internet Explorer 11
-/*        imgSize: [20, 20],*/
         scale: 0.7,
-        src: this.icon,
-      })
-      var circleStyle = new Circle({
-        fill: new Fill({
-          color: 'rgba(255, 255, 255, 0.6)',
-        }),
-        radius: 15,
-        stroke: strokeStyle,
+        src: require('../src/assets/location_on-white-48dp.svg'),
       })
       // create vector layer
       var source = new VectorSource();
@@ -147,18 +184,12 @@ export default {
       const vectorGeoJSON = new VectorLayer({
         source: new VectorSource({
           format: new GeoJSON(),
-          url: this.url,
+          url: 'https://raw.githubusercontent.com/jacksonks/geojson/master/station_list.geojson',
         }),
         visible: true,
         style: new Style({
-/*          fill: fillStyle,
-          stroke: strokeStyle,*/
           image: imageStyle,
         })
-        /*        style: function (feature) {
-                  style.getText().setText(feature.get('name'));
-                  return style;
-                },*/
       })
       // create map with 2 layer
       var map = new Map({
