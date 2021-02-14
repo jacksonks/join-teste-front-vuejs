@@ -105,11 +105,11 @@ export default {
   watch:{},
   methods: {
     getTypes(types){
-      console.log('types:', types)
+      console.log('types filtered:', types)
       this.types = types
     },
     async getStations(stations){
-      console.log('stations:', stations)
+      console.log('stations filtered:', stations)
       this.stations = stations
     },
     initiateMap() {
@@ -203,8 +203,6 @@ export default {
       map.on('click', function (e){
         overlayLayer.setPosition(undefined)
         map.forEachFeatureAtPixel(e.pixel, function (feature, layer){
-          console.log(feature.get('id'))
-          console.log(feature.get('name'))
           overlayLayer.setPosition(e.coordinate)
           overlayFeatureId.innerHTML = feature.get('id')
           overlayFeatureName.innerHTML = feature.get('name')

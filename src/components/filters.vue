@@ -138,7 +138,7 @@
               <v-divider></v-divider>
               <v-card-actions>
                 <v-spacer/>
-                <v-btn color="primary" @click="consulting" :disabled="stations_selected ? true : false">Consultar<v-icon right>search</v-icon></v-btn>
+                <v-btn color="primary" @click="consulting">Consultar<v-icon right>search</v-icon></v-btn>
                 <v-spacer/>
               </v-card-actions>
             </v-card>
