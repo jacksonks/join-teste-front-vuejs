@@ -3,6 +3,24 @@
     <v-row class="text-center">
       <v-col cols="6">
         <v-container fluid>
+          <v-row class="text-center">
+            <v-col cols="12">
+              <v-img alt="Join Blue Logo" :src="require('../assets/logo-blue.png')" class="my-3" contain height="100"/>
+            </v-col>
+            <v-col class="mb-4">
+              <h1 class="display-1 font-weight-bold mb-3">Mapa para Visualização de Localização de Estações</h1>
+              <p class="subheading font-weight-bold">Desenvolvido com
+                <a href="https://vuejs.org/" target="_blank">VueJS</a>,
+                <a href="https://vuetifyjs.com/en/" target="_blank">Vuetify</a>, e
+                <a href="https://openlayers.org/" target="_blank">OpenLayers</a>, por
+                <a href="https://www.linkedin.com/in/jackson-kelvin/" target="_blank">Jackson Kelvin de Souza</a>.
+              </p>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-col>
+      <v-col cols="6">
+        <v-container fluid>
           <v-row>
             <v-card width="600">
               <v-card-title class="headline grey lighten-2">
@@ -120,7 +138,7 @@
               <v-divider></v-divider>
               <v-card-actions>
                 <v-spacer/>
-                <v-btn color="primary" @click="consulting">Consultar<v-icon right>search</v-icon></v-btn>
+                <v-btn color="primary" @click="consulting" :disabled="stations_selected ? true : false">Consultar<v-icon right>search</v-icon></v-btn>
                 <v-spacer/>
               </v-card-actions>
             </v-card>
