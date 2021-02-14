@@ -49,7 +49,6 @@
                   <v-col class="d-flex" cols="4">
                     <v-text-field
                         outlined
-                        v-model="filtered[0].id"
                         label="Identificador"
                     ></v-text-field>
                   </v-col>
@@ -57,7 +56,6 @@
                   <v-col class="d-flex" cols="8">
                     <v-text-field
                         outlined
-                        v-model="filtered[0].name"
                         label="Nome"
                     ></v-text-field>
                   </v-col>
@@ -65,7 +63,6 @@
                   <v-col class="d-flex" cols="6">
                     <v-text-field
                         outlined
-                        v-model="filtered[0].latitude"
                         label="Latitude"
                     ></v-text-field>
                   </v-col>
@@ -73,7 +70,6 @@
                   <v-col class="d-flex" cols="6">
                     <v-text-field
                         outlined
-                        v-model="filtered[0].longitude"
                         label="Longitude"
                     ></v-text-field>
                   </v-col>
@@ -81,7 +77,6 @@
                   <v-col class="d-flex" cols="4">
                     <v-text-field
                         outlined
-                        v-model="filtered[0].elevation_meters"
                         label="Elevação (m2)"
                     ></v-text-field>
                   </v-col>
@@ -89,7 +84,6 @@
                   <v-col class="d-flex" cols="4">
                     <v-text-field
                         outlined
-                        v-model="filtered[0].operation_start_date"
                         label="Inicio de Operação"
                     ></v-text-field>
                   </v-col>
@@ -97,7 +91,6 @@
                   <v-col class="d-flex" cols="4">
                     <v-text-field
                         outlined
-                        v-model="filtered[0].operation_end_date"
                         label="Fim de Operação"
                     ></v-text-field>
                   </v-col>
@@ -105,7 +98,6 @@
                   <v-col class="d-flex" cols="12">
                     <v-text-field
                         outlined
-                        v-model="filtered[0].station_type_id"
                         label="Tipo de Estação"
                     ></v-text-field>
                   </v-col>
@@ -130,17 +122,15 @@ import View from "ol/View";
 import { defaults as defaultControls, ScaleLine } from "ol/control";
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {OSM, Vector as VectorSource} from 'ol/source';
-/*import {Fill, Stroke, Style, Text} from 'ol/style';*/
 import Filters from "@/components/filters";
 export default {
   name: 'App',
   components: {Filters},
   data: () => ({
     dialog: false,
-    filtered: 'undefined',
     types: undefined,
     stations: undefined,
-    items:'undefined',
+    url: 'https://raw.githubusercontent.com/jacksonks/geojson/master/station_list.geojson',
   }),
   async mounted() {
     await this.initiateMap();
@@ -152,34 +142,12 @@ export default {
       console.log('types:', types)
       this.types = types
     },
-    getStations(stations){
+    async getStations(stations){
       console.log('stations:', stations)
       this.stations = stations
-      this.filtered = stations
-      if(this.filtered.length > 0){
-        this.dialog = true
-      }
+      this.dialog = true
     },
     initiateMap() {
-/*      var style = new Style({
-        fill: new Fill({
-          color: 'rgba(255, 255, 255, 0.6)',
-        }),
-        stroke: new Stroke({
-          color: '#319FD3',
-          width: 1,
-        }),
-        text: new Text({
-          font: '12px Calibri,sans-serif',
-          fill: new Fill({
-            color: '#000',
-          }),
-          stroke: new Stroke({
-            color: '#fff',
-            width: 3,
-          }),
-        }),
-      });*/
       // create vector layer
       var source = new VectorSource();
       var vector = new VectorLayer({
@@ -193,8 +161,9 @@ export default {
       const vectorGeoJSON = new VectorLayer({
         source: new VectorSource({
           format: new GeoJSON(),
-          url: 'https://raw.githubusercontent.com/jacksonks/geojson/master/station_list.geojson',
+          url: this.url,
         }),
+        visible: true,
 /*        style: function (feature) {
           style.getText().setText(feature.get('name'));
           return style;
@@ -209,13 +178,14 @@ export default {
           }),
         ]),
         target: "map",
-        layers: [raster, vector, vectorGeoJSON],
+        layers: [raster, vector,vectorGeoJSON],
         view: new View({
           projection: "EPSG:4326",
           center: [-51.815011395380765,-24.650150016322684],
           zoom: 7,
         }),
       });
+/*      if( this.stations ){ map.addLayer(vectorGeoJSON) }*/
 /*      map.on('click', function (e){
         console.log('e', e.coordinate)
       })*/
@@ -223,8 +193,7 @@ export default {
   },
 };
 </script>
-
-<style scoped>
+<style>
 #map {
   position: absolute;
   padding: 0;

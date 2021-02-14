@@ -15,7 +15,6 @@
           </p>
         </v-col>
       </v-col>
-
       <v-col cols="6">
         <v-container fluid>
           <v-row>
@@ -155,15 +154,17 @@ export default {
     stations_types_selected: [],
     stations_selected: [],
     expand: true,
+    geojson: undefined,
   }),
   created() {
     this.fetchStation();
     this.fetchStationType();
+    this.fetchFeatures();
   },
   computed:{
     stations(){
       let aux = []
-      if(this.stations_types_selected.length ==! 0){
+      if(this.stations_types_selected.length !== 0){
         for(let station in this.stations_types_selected){
           let filtered = this.station_list.filter(a => {
             return a.station_type_id === this.stations_types_selected[station].id;
@@ -227,6 +228,16 @@ export default {
         }
       })
     },
+    fetchFeatures() {
+      fetch("https://raw.githubusercontent.com/jacksonks/geojson/master/station_list.geojson")
+          .then(response => response.json())
+          .then(response => {
+            this.geojson = response;
+          })
+          .catch((error) => {
+            console.log('Looks like there was a problem: \n', error);
+          });
+    },
     fetchStation() {
       fetch("http://localhost:3000/station")
           .then(response => response.json())
@@ -248,7 +259,19 @@ export default {
           });
     },
     consulting(){
-      this.$emit('stations', this.stations_selected)
+      console.log('original:', this.geojson)
+      let features = []
+      for(let item in this.geojson.features){
+        for(let station in this.stations_selected){
+          if(this.geojson.features[item].properties.id ===  this.stations_selected[station].id){
+            features.push(this.geojson.features[item])
+          }
+        }
+      }
+      //console.log('features:', features)
+      this.geojson.features = features
+      //console.log('geo:', this.geojson)
+      this.$emit('stations', this.geojson)
       this.$emit('types', this.stations_types_selected)
     },
   },
