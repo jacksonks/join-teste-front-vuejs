@@ -20,56 +20,47 @@
       </v-btn>
     </v-app-bar>
     <v-main>
-      <filters @stations="getStations" @types="getTypes" />
-
-          <v-card width="500" class="text-center popup-container">
-            <v-card-title class="headline grey lighten-2">Dados da Estação</v-card-title>
-            <v-card-text class="popup-container">
-              <v-container fluid class="popup-container">
-                <v-row align="center" class="popup-container">
-                  <v-col class="d-flex" cols="4">
+      <v-card width="500" class="text-center popup-container">
+        <v-card-title class="headline grey lighten-2">Dados da Estação</v-card-title>
+        <v-card-text class="popup-container">
+          <v-container fluid class="popup-container">
+            <v-row align="center" class="popup-container">
+              <v-col class="d-flex" cols="12">
+                <v-btn outlined color="black">
                   <label>Identificador:</label><strong class="overlay-text" id="feature-id"></strong><br/>
-                  </v-col>
-                  <v-col class="d-flex" cols="8">
-                      <v-btn outlined color="black">
-                        <label>Nome: </label><strong class="overlay-text" id="feature-name"></strong>
-                      </v-btn>
-                    <div style="border-color: black; border-radius: 2px; ">
-<!--                  <label>Nome:</label><strong class="overlay-text" id="feature-name"></strong>-->
-                    </div>
-                  </v-col>
-                  <v-col class="d-flex" cols="4">
-                    <v-text-field dense hide-details readonly outlined label="Identificador"></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex" cols="8">
-                    <v-text-field dense hide-details readonly outlined label="Nome"></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex" cols="6">
-                    <v-text-field dense hide-details readonly outlined label="Latitude"></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex" cols="6">
-                    <v-text-field dense hide-details readonly outlined label="Longitude"></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex" cols="4">
-                    <v-text-field dense hide-details readonly outlined label="Elevação (m2)"></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex" cols="4">
-                    <v-text-field dense hide-details readonly outlined label="Inicio de Operação"></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex" cols="4">
-                    <v-text-field dense hide-details readonly outlined label="Fim de Operação"></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex" cols="12">
-                    <v-text-field dense hide-details readonly outlined label="Tipo de Estação"></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-          </v-card>
+                </v-btn>
+                <v-spacer/>
+                <v-btn outlined color="black">
+                  <label>Nome: </label><strong class="overlay-text" id="feature-name"></strong>
+                </v-btn>
+              </v-col>
+              <v-col class="d-flex" cols="6">
+                <v-text-field dense hide-details readonly outlined label="Latitude"></v-text-field>
+              </v-col>
+              <v-col class="d-flex" cols="6">
+                <v-text-field dense hide-details readonly outlined label="Longitude"></v-text-field>
+              </v-col>
+              <v-col class="d-flex" cols="4">
+                <v-text-field dense hide-details readonly outlined label="Elevação (m2)"></v-text-field>
+              </v-col>
+              <v-col class="d-flex" cols="4">
+                <v-text-field dense hide-details readonly outlined label="Inicio de Operação"></v-text-field>
+              </v-col>
+              <v-col class="d-flex" cols="4">
+                <v-text-field dense hide-details readonly outlined label="Fim de Operação"></v-text-field>
+              </v-col>
+              <v-col class="d-flex" cols="12">
+                <v-text-field dense hide-details readonly outlined label="Tipo de Estação"></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+      </v-card>
       <v-card>
         <div id="map"></div>
       </v-card>
     </v-main>
+    <filters @stations="getStations" @types="getTypes" />
   </v-app>
 </template>
 
@@ -84,7 +75,7 @@ import View from "ol/View";
 import { defaults as defaultControls, ScaleLine } from "ol/control";
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {OSM, Vector as VectorSource} from 'ol/source';
-import {Fill, Stroke, Style, Text, Circle} from 'ol/style';
+import {Fill, Stroke, Style, Icon, Circle} from 'ol/style';
 import Overlay from 'ol/Overlay';
 import Filters from "@/components/filters";
 export default {
@@ -102,6 +93,7 @@ export default {
     operation_end_date: undefined,
     station_type_id: undefined,
     dialog: false,
+    icon: require('../src/assets/location_on-white-48dp.svg'),
     types: undefined,
     stations: undefined,
     url: 'https://raw.githubusercontent.com/jacksonks/geojson/master/station_list.geojson',
@@ -128,6 +120,13 @@ export default {
         color: '#319FD3',
         width: 1,
       })
+      var imageStyle = new Icon({
+        color: 'red',
+        // For Internet Explorer 11
+/*        imgSize: [20, 20],*/
+        scale: 0.7,
+        src: this.icon,
+      })
       var circleStyle = new Circle({
         fill: new Fill({
           color: 'rgba(255, 255, 255, 0.6)',
@@ -152,9 +151,9 @@ export default {
         }),
         visible: true,
         style: new Style({
-          fill: fillStyle,
-          stroke: strokeStyle,
-          image: circleStyle,
+/*          fill: fillStyle,
+          stroke: strokeStyle,*/
+          image: imageStyle,
         })
         /*        style: function (feature) {
                   style.getText().setText(feature.get('name'));
