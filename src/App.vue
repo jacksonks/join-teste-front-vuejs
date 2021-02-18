@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <v-app-bar app color="cyan lighten-1" dark>
       <div>
         <v-img
             alt="Join White Logo"
