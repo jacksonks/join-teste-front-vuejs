@@ -101,7 +101,7 @@ export default {
     dialog: false,
     types: undefined,
     stations: undefined,
-    url: "https://raw.githubusercontent.com/jacksonks/geojson/master/station_list.geojson",
+    //url: "https://raw.githubusercontent.com/jacksonks/geojson/master/station_list.geojson",
     vectorGeoJSON: new VectorLayer(),
     source: new VectorSource({
       format: new GeoJSON(),
@@ -146,10 +146,19 @@ export default {
       // Vector data source in GeoJSON format
       this.vectorGeoJSON = new VectorLayer({
         source: this.source,
-        visible: true,
-        style: new Style({
+        style: function (feature, resolution) {
+          console.log(feature.getProperties()); // <== all geojson properties
+          return [new Style({
+            image: new Icon({
+              scale: 0.9,
+              color: feature.get('station_type_id') == "1" ? '#7cb5ec' : feature.get('station_type_id') == "2" ? '#434348': feature.get('station_type_id') == "3" ? '#90ed7d' : feature.get('station_type_id') == "4" ? '#f7a35c': '#8085e9',
+              src: require("../src/assets/location_on-white-48dp.svg"),
+            })
+          })];
+        }
+/*        style: new Style({
           image: imageStyle,
-        }),
+        }),*/
       });
       // create map with 2 layer
       var map = new Map({
