@@ -97,6 +97,7 @@ export default {
     dialog: false,
     types: undefined,
     stations: undefined,
+    url: 'https://raw.githubusercontent.com/jacksonks/geojson/master/station_list.geojson'
   }),
   async mounted() {
     await this.initiateMap();
@@ -111,11 +112,14 @@ export default {
     async getStations(stations){
       console.log('stations filtered:', stations)
       this.stations = stations
+      this.url = stations
+      await this.initiateMap();
     },
     initiateMap() {
       var imageStyle = new Icon({
         scale: 1.0,
-        src: require('../src/assets/location_on-black-48dp.svg'),
+        color: 'grey',
+        src: require('../src/assets/location_on-white-48dp.svg'),
       })
       // create vector layer
       var source = new VectorSource();
@@ -130,7 +134,7 @@ export default {
       const vectorGeoJSON = new VectorLayer({
         source: new VectorSource({
           format: new GeoJSON(),
-          url: 'https://raw.githubusercontent.com/jacksonks/geojson/master/station_list.geojson',
+          url: this.url,
         }),
         visible: true,
         style: new Style({
